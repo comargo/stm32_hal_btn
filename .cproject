@@ -95,7 +95,7 @@
                                     									
                                     <listOptionValue builtIn="false" value="../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy"/>
                                     									
-                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/}&quot;"/>
+                                    <listOptionValue builtIn="false" value="&quot;${ProjDirPath}&quot;"/>
                                     								
                                 </option>
                                 								
@@ -245,7 +245,7 @@
                                     									
                                     <listOptionValue builtIn="false" value="../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy"/>
                                     									
-                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/}&quot;"/>
+                                    <listOptionValue builtIn="false" value="&quot;${ProjDirPath}&quot;"/>
                                     								
                                 </option>
                                 								
