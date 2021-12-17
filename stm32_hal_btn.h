@@ -94,6 +94,4 @@ uint8_t CM_HAL_BTN_isStep(struct CM_HAL_BTN* btn, uint8_t clicks);
 // SysTick for hold support
 void CM_HAL_BTN_IRQHandle(struct CM_HAL_BTN* btn);
 
-
-
 #endif /* INC_STM32_HAL_BTN_H_ */
