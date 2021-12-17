@@ -90,72 +90,72 @@ void CM_HAL_BTN_Init(struct CM_HAL_BTN* btn)
 	HAL_NVIC_EnableIRQ(irq);
 }
 
-bool CM_HAL_BTN_isPress(struct CM_HAL_BTN* btn)
+uint8_t CM_HAL_BTN_isPress(struct CM_HAL_BTN* btn)
 {
 	if(btn->flags.isPress_f) {
-		btn->flags.isPress_f = false;
-		return true;
+		btn->flags.isPress_f = 0;
+		return 1;
 	}
-	else return false;
+	else return 0;
 }
 
-bool CM_HAL_BTN_isRelease(struct CM_HAL_BTN* btn)
+uint8_t CM_HAL_BTN_isRelease(struct CM_HAL_BTN* btn)
 {
 	if (btn->flags.isRelease_f) {
-		btn->flags.isRelease_f = false;
-		return true;
-	} else return false;
+		btn->flags.isRelease_f = 0;
+		return 1;
+	} else return 0;
 
 }
 
-bool CM_HAL_BTN_isClick(struct CM_HAL_BTN* btn)
+uint8_t CM_HAL_BTN_isClick(struct CM_HAL_BTN* btn)
 {
 	if (btn->flags.isOne_f) {
-		btn->flags.isOne_f = false;
-		return true;
-	} else return false;
+		btn->flags.isOne_f = 0;
+		return 1;
+	} else return 0;
 }
 
-bool CM_HAL_BTN_isHolded(struct CM_HAL_BTN* btn)
+uint8_t CM_HAL_BTN_isHolded(struct CM_HAL_BTN* btn)
 {
 	if (btn->flags.isHolded_f) {
-		btn->flags.isHolded_f = false;
-		return true;
-	} else return false;
+		btn->flags.isHolded_f = 0;
+		return 1;
+	} else return 0;
 }
 
-bool CM_HAL_BTN_isHold(struct CM_HAL_BTN* btn)
+uint8_t CM_HAL_BTN_isHold(struct CM_HAL_BTN* btn)
 {
-	if (btn->flags.step_flag) return true;
-	else return false;
+	if (btn->flags.step_flag) return 1;
+	else return 0;
 }
 
-bool CM_HAL_BTN_state(struct CM_HAL_BTN* btn)
+uint8_t CM_HAL_BTN_state(struct CM_HAL_BTN* btn)
 {
 	return btn->btn_state;
 }
 
-bool CM_HAL_BTN_isSingle(struct CM_HAL_BTN* btn)
+uint8_t CM_HAL_BTN_isSingle(struct CM_HAL_BTN* btn)
 {
 	return CM_HAL_BTN_hasClicks(btn) && (CM_HAL_BTN_getClicks(btn) == 1);
 }
 
-bool CM_HAL_BTN_isDouble(struct CM_HAL_BTN* btn)
+uint8_t CM_HAL_BTN_isDouble(struct CM_HAL_BTN* btn)
 {
 	return CM_HAL_BTN_hasClicks(btn) && (CM_HAL_BTN_getClicks(btn) == 2);
 }
 
-bool CM_HAL_BTN_isTripple(struct CM_HAL_BTN* btn)
+uint8_t CM_HAL_BTN_isTripple(struct CM_HAL_BTN* btn)
 {
 	return CM_HAL_BTN_hasClicks(btn) && (CM_HAL_BTN_getClicks(btn) == 3);
 }
 
-bool CM_HAL_BTN_hasClicks(struct CM_HAL_BTN* btn)
+uint8_t CM_HAL_BTN_hasClicks(struct CM_HAL_BTN* btn)
 {
 	if (btn->flags.counter_flag) {
-		btn->flags.counter_flag = false;
-		return true;
-	} else return false;
+		btn->flags.counter_flag = 0;
+		return 1;
+	} else return 0;
 }
 
 uint8_t CM_HAL_BTN_getClicks(struct CM_HAL_BTN* btn)
@@ -171,13 +171,13 @@ uint8_t CM_HAL_BTN_getHoldClicks(struct CM_HAL_BTN* btn)
 	return btn->flags.hold_flag ? btn->last_hold_counter : 0;
 }
 
-bool CM_HAL_BTN_isStep(struct CM_HAL_BTN* btn, uint8_t clicks)
+uint8_t CM_HAL_BTN_isStep(struct CM_HAL_BTN* btn, uint8_t clicks)
 {
 	if (btn->btn_counter == clicks && btn->flags.step_flag && (HAL_GetTick() - btn->btn_timer >= btn->step_timeout)) {
 		btn->btn_timer = HAL_GetTick();
-		return true;
+		return 1;
 	}
-	else return false;
+	else return 0;
 }
 
 void CM_HAL_BTN_IRQHandle(struct CM_HAL_BTN* btn)
@@ -189,36 +189,36 @@ void CM_HAL_BTN_IRQHandle(struct CM_HAL_BTN* btn)
 	// Pressing
 	if (btn->btn_state && !btn->btn_flag) {
 		if (!btn->flags.btn_deb) {
-			btn->flags.btn_deb = true;
+			btn->flags.btn_deb = 1;
 			btn->btn_timer = thisMls;
 		} else {
 			if (thisMls - btn->btn_timer >= btn->debounce) {
-				btn->btn_flag = true;
-				btn->flags.isPress_f = true;
-				btn->flags.oneClick_f = true;
+				btn->btn_flag = 1;
+				btn->flags.isPress_f = 1;
+				btn->flags.oneClick_f = 1;
 				if(btn->callback)
 					btn->callback(btn, btn->userData, CM_HAL_BTN_CB_PRESSED);
 			}
 		}
 	} else {
-		btn->flags.btn_deb = false;
+		btn->flags.btn_deb = 0;
 	}
 
 	// Releasing
 	if (!btn->btn_state && btn->btn_flag) {
-		btn->btn_flag = false;
+		btn->btn_flag = 0;
 		if (!btn->flags.hold_flag) btn->btn_counter++;
-		btn->flags.hold_flag = false;
-		btn->flags.isRelease_f = true;
+		btn->flags.hold_flag = 0;
+		btn->flags.isRelease_f = 1;
 		btn->btn_timer = thisMls;
 		if (btn->flags.step_flag) {
 			btn->last_counter = 0;
 			btn->btn_counter = 0;
-			btn->flags.step_flag = false;
+			btn->flags.step_flag = 0;
 		}
 		if (btn->flags.oneClick_f) {
-			btn->flags.oneClick_f = false;
-			btn->flags.isOne_f = true;
+			btn->flags.oneClick_f = 0;
+			btn->flags.isOne_f = 1;
 		}
 		if(btn->callback)
 			btn->callback(btn, btn->userData, CM_HAL_BTN_CB_RELEASED);
@@ -226,13 +226,13 @@ void CM_HAL_BTN_IRQHandle(struct CM_HAL_BTN* btn)
 
 	// Button holden
 	if (btn->btn_flag && btn->btn_state && (thisMls - btn->btn_timer >= btn->timeout) && !btn->flags.hold_flag) {
-		btn->flags.hold_flag = true;
+		btn->flags.hold_flag = 1;
 		btn->last_hold_counter = btn->btn_counter;
 		//btn_counter = 0;
 		//last_counter = 0;
-		btn->flags.isHolded_f = true;
-		btn->flags.step_flag = true;
-		btn->flags.oneClick_f = false;
+		btn->flags.isHolded_f = 1;
+		btn->flags.step_flag = 1;
+		btn->flags.oneClick_f = 0;
 		btn->btn_timer = thisMls;
 	}
 
@@ -240,7 +240,7 @@ void CM_HAL_BTN_IRQHandle(struct CM_HAL_BTN* btn)
 	if ((thisMls - btn->btn_timer >= btn->click_timeout) && (btn->btn_counter != 0)) {
 		btn->last_counter = btn->btn_counter;
 		btn->btn_counter = 0;
-		btn->flags.counter_flag = true;
+		btn->flags.counter_flag = 1;
 		btn->callback(btn, btn->userData, CM_HAL_BTN_CB_CLICK_TIMEOUT);
 	}
 }

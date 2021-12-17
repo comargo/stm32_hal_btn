@@ -8,7 +8,6 @@
 #ifndef INC_STM32_HAL_BTN_H_
 #define INC_STM32_HAL_BTN_H_
 
-#include <stdbool.h>
 #include "stm32f1xx_hal.h"
 
 #define CM_HAL_BTN_DEBOUNCE 80
@@ -24,20 +23,20 @@ enum CM_HAL_BTN_Reason {
 
 #pragma pack(push,1)
 struct CM_HAL_BTN_Flags {
-	bool btn_deb: 1;
-	bool hold_flag: 1;
-	bool counter_flag: 1;
-	bool isHolded_f: 1;
-	bool isRelease_f: 1;
-	bool isPress_f: 1;
-	bool step_flag: 1;
-	bool oneClick_f: 1;
-	bool isOne_f: 1;
-	bool inv_state: 1;
-	bool mode: 1;
-	bool type: 1;
-	bool tickMode: 1;
-	bool noPin: 1;
+	uint8_t btn_deb: 1;
+	uint8_t hold_flag: 1;
+	uint8_t counter_flag: 1;
+	uint8_t isHolded_f: 1;
+	uint8_t isRelease_f: 1;
+	uint8_t isPress_f: 1;
+	uint8_t step_flag: 1;
+	uint8_t oneClick_f: 1;
+	uint8_t isOne_f: 1;
+	uint8_t inv_state: 1;
+	uint8_t mode: 1;
+	uint8_t type: 1;
+	uint8_t tickMode: 1;
+	uint8_t noPin: 1;
 };
 #pragma pack(pop)
 
@@ -59,8 +58,8 @@ struct CM_HAL_BTN {
 	uint32_t last_counter;
 	uint32_t last_hold_counter;
 	uint32_t btn_timer;
-	bool btn_state;
-	bool btn_flag;
+	uint8_t btn_state;
+	uint8_t btn_flag;
 };
 
 #define CM_HAL_BTN_StaticInit(_GPIOx, _GPIO_Pin, _Pull, _Dir) \
@@ -72,23 +71,23 @@ struct CM_HAL_BTN {
 	.flags = {.type = (_Pull  == GPIO_PULLDOWN), \
 				.inv_state = _Dir}, \
 	.btn_counter = 0, .last_counter = 0, .last_hold_counter = 0, \
-	.btn_timer = 0, .btn_state = false, .btn_flag = false }
+	.btn_timer = 0, .btn_state = 0, .btn_flag = 0 }
 
 
 void CM_HAL_BTN_Init(struct CM_HAL_BTN* btn);
-bool CM_HAL_BTN_isPress(struct CM_HAL_BTN* btn);
-bool CM_HAL_BTN_isRelease(struct CM_HAL_BTN* btn);
-bool CM_HAL_BTN_isClick(struct CM_HAL_BTN* btn);
-bool CM_HAL_BTN_isHolded(struct CM_HAL_BTN* btn);
-bool CM_HAL_BTN_isHold(struct CM_HAL_BTN* btn);
-bool CM_HAL_BTN_state(struct CM_HAL_BTN* btn);
-bool CM_HAL_BTN_isSingle(struct CM_HAL_BTN* btn);
-bool CM_HAL_BTN_isDouble(struct CM_HAL_BTN* btn);
-bool CM_HAL_BTN_isTripple(struct CM_HAL_BTN* btn);
-bool CM_HAL_BTN_hasClicks(struct CM_HAL_BTN* btn);
+uint8_t CM_HAL_BTN_isPress(struct CM_HAL_BTN* btn);
+uint8_t CM_HAL_BTN_isRelease(struct CM_HAL_BTN* btn);
+uint8_t CM_HAL_BTN_isClick(struct CM_HAL_BTN* btn);
+uint8_t CM_HAL_BTN_isHolded(struct CM_HAL_BTN* btn);
+uint8_t CM_HAL_BTN_isHold(struct CM_HAL_BTN* btn);
+uint8_t CM_HAL_BTN_state(struct CM_HAL_BTN* btn);
+uint8_t CM_HAL_BTN_isSingle(struct CM_HAL_BTN* btn);
+uint8_t CM_HAL_BTN_isDouble(struct CM_HAL_BTN* btn);
+uint8_t CM_HAL_BTN_isTripple(struct CM_HAL_BTN* btn);
+uint8_t CM_HAL_BTN_hasClicks(struct CM_HAL_BTN* btn);
 uint8_t CM_HAL_BTN_getClicks(struct CM_HAL_BTN* btn);
 uint8_t CM_HAL_BTN_getHoldClicks(struct CM_HAL_BTN* btn);
-bool CM_HAL_BTN_isStep(struct CM_HAL_BTN* btn, uint8_t clicks);
+uint8_t CM_HAL_BTN_isStep(struct CM_HAL_BTN* btn, uint8_t clicks);
 
 // This function should be called in interrupt routines:
 // EXTI for click support
