@@ -258,6 +258,7 @@ void CM_HAL_BTN_IRQHandle(struct CM_HAL_BTN *btn)
 		btn->last_counter = btn->btn_counter;
 		btn->btn_counter = 0;
 		btn->flags.counter_flag = 1;
-		btn->callback(btn, btn->userData, CM_HAL_BTN_CB_CLICK_TIMEOUT);
+		if(btn->callback)
+		  btn->callback(btn, btn->userData, CM_HAL_BTN_CB_CLICK_TIMEOUT);
 	}
 }
